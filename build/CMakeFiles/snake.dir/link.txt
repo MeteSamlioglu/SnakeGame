@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/snake.dir/src/Snake.cpp.o CMakeFiles/snake.dir/src/Game.cpp.o CMakeFiles/snake.dir/src/Move.cpp.o CMakeFiles/snake.dir/src/SnakeObject.cpp.o CMakeFiles/snake.dir/src/main.cpp.o  -o snake  -pthread 

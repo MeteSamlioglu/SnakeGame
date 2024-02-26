@@ -1,0 +1,3 @@
+/mnt/d/snake/build/CMakeFiles/rebuild_cache.dir
+/mnt/d/snake/build/CMakeFiles/edit_cache.dir
+/mnt/d/snake/build/CMakeFiles/snake.dir
