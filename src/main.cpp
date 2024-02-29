@@ -7,12 +7,13 @@
 #include <list>
 #include <thread>
 #include <termios.h>
-
 #include"Snake.hpp"
 #include"Game.hpp"
 #include"Directions.hpp"
 #include"Coordinates.hpp"
-
+#include <random>
+#include <chrono>
+#include <atomic>
 
 #define MAP_WIDTH 32
 #define MAP_LENGTH 16
@@ -24,11 +25,9 @@ Directions global_direction = RIGHT;
 
 bool is_move_catched = false;
 
-bool is_quit = false;
-
-
-
-
+bool update_target = false;
+//bool is_quit = false;
+std::atomic<bool> is_quit(false);
 
 void threadFunction() {
     // Change terminal settings to non-canonical mode
@@ -39,7 +38,7 @@ void threadFunction() {
     tcsetattr(STDIN_FILENO, TCSANOW, &newSettings);
 
     char c;
-    while (1) {
+    while (is_quit != true) {
         c = getchar();
         switch (c) {
             case 'W':
@@ -72,6 +71,17 @@ void threadFunction() {
     }
 }
 
+void reflesh_target()
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    
+    while(is_quit != true) 
+    {
+        update_target = true;
+        std::this_thread::sleep_for(std::chrono::seconds(8));
+    }
+}
 
 SnakeObject headObject = SnakeObject(4, 4); // Fix
 
@@ -80,41 +90,53 @@ void game( );
 void apply_move(Directions move);
 void update_terminal(Game game_);
 
-
+std::thread t1(threadFunction);
+std::thread t2(reflesh_target);
 int main() {
         
-        
-    std::thread t1(threadFunction);
+
     
     game();
     
     t1.join();
-
+    t2.join();
+    
     return 0;
 }
 
 
 void game()
 {
+
     Directions move;
     Snake snake_ = Snake();
     Game game_ = Game(MAP_WIDTH, MAP_LENGTH);
+    
     snake_.insertAtEnd(headObject);
     snake_.increaseLength();
     snake_.increaseLength();
-    snake_.get_snake_coords();
+
     
     while(is_quit!= true)
     {
-        
+
+        update_terminal(game_); 
+
         snake_.set_active_move(global_direction, is_move_catched);
-
-        game_.set_game_map(snake_);
-
-        update_terminal(game_);
-    
         
+        if(game_.set_game_map(snake_, update_target) == false)
+        {
+            is_quit = true;
+            break;
+        }       
+        if(is_move_catched)
+            is_move_catched = false;
+        if(update_target)
+        {
+            update_target = false;
+        }
     }
+
 }
 
 
@@ -130,9 +152,10 @@ void display_map(Game game_)
                 
             if (map_[i][j] == EMPTY)
                 cout<<" ";
-            else if(map_[i][j] == SNAKE)
+            if(map_[i][j] == SNAKE)
+                cout<<"*";
+            if(map_[i][j] == TARGET)
                 cout<<"O";
-        
         }
         cout<<endl;
     }
@@ -142,7 +165,7 @@ void update_terminal(Game game_)
 {
         cout<<endl<<endl;
         display_map(game_);
-        usleep(50000);
+        usleep(150000);
         //std::system("cls");
         std::system("clear");
 }

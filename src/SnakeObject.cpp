@@ -17,7 +17,7 @@ SnakeObject::SnakeObject(int row, int column)
 	activeMove = RIGHT;
 }
 
-SnakeObject::SnakeObject(int row, int column, Directions dir_)
+SnakeObject::SnakeObject(int row, int column, SnakeObject& tail)
 {
 	curr_coordinate = new Coordinates;
 		
@@ -25,7 +25,15 @@ SnakeObject::SnakeObject(int row, int column, Directions dir_)
 	
 	curr_coordinate->column = column;		
 
-	activeMove = dir_;
+	if(tail.isMoveQueueEmpty())
+	{
+		activeMove = tail.getActiveDirection();
+	}
+	else
+	{
+		directionsQueue = tail.getFutureMoves();
+		activeMove = tail.getActiveDirection();
+	}
 }
 void SnakeObject::setCoordinates(Coordinates& coord)
 {
@@ -46,6 +54,10 @@ Directions SnakeObject::getActiveDirection() const
 {
 	return activeMove;
 }
+void SnakeObject::setActiveDirection(Directions dir_)
+{
+	activeMove = dir_;
+}
 
 void SnakeObject::setActiveMove(Directions dir_, Coordinates* coord)
 {
@@ -57,15 +69,42 @@ void SnakeObject::setActiveMove(Directions dir_, Coordinates* coord)
 	
 	nextMove.insertMove(dir_, nextCoord);
 	directionsQueue.push(nextMove);	
-	activeMove = dir_;
 }
+
 Move SnakeObject::getMove() const
 {
-	return directionsQueue.front();
+		return directionsQueue.front();
 }
 
 void SnakeObject::removeLastMove()
 {
 	activeMove = directionsQueue.front().getDirectionCoordinates();
+
 	directionsQueue.pop();
 }
+
+bool SnakeObject::isMoveQueueEmpty() const
+{
+	if(directionsQueue.size() > 0)
+		return false;
+	else
+		return true;
+}
+
+queue<Move> SnakeObject::getFutureMoves() const
+{
+    std::queue<Move> copiedQueue;
+	
+	std::queue<Move> tempQueue = directionsQueue;
+
+	while(!tempQueue.empty()) 
+	{
+        // Deep copy each Move object and push it into the new queue
+        const Move& originalMove = tempQueue.front();
+        copiedQueue.push(Move(originalMove));
+
+        tempQueue.pop();
+    }
+    return copiedQueue;
+}
+
