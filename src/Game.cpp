@@ -23,11 +23,17 @@ Game::Game(int map_width_, int map_length_)
     map_length = map_length_;
     target_column = 3;
     target_row = 3;
+    score = 0;
 }
 
 bool Game::isTargetOnSnake(Snake& snake_head, int row, int column) const
 {
     return snake_head.isPointOnSnake(row, column);    
+}
+
+int Game::getScore() const
+{
+    return score;
 }
 
 void Game::reflesh_target(Snake& snake_head)
@@ -54,10 +60,8 @@ bool Game::isTargetEaten(Snake& snake, int target_row, int target_column) const
 bool Game::set_game_map(Snake& snake_head, bool update_target)
 {
     if(snake_head.isEatenItself())
-    {
-        cout<<"Game is Over";
         return false;
-    }
+    
     if(update_target)
     {
         reflesh_target(snake_head);
@@ -65,6 +69,7 @@ bool Game::set_game_map(Snake& snake_head, bool update_target)
     if(update_target == false && isTargetEaten(snake_head, target_row, target_column))
     {    
         snake_head.increaseLength(); // tail'ın movelarını da almalı sadece aktif move değil hepsini
+        score++;
         reflesh_target(snake_head);
     }
     list<pair<int,int>> snakeCoords = snake_head.get_snake_coords();

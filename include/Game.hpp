@@ -20,6 +20,8 @@ class Game
 		bool isTargetOnSnake(Snake& snake_head, int row, int column) const;
 		
 		bool isTargetEaten(Snake& snake, int target_row, int target_column) const;
+
+		int getScore() const;
 	
 	private:
 		game_material **map_;
@@ -27,7 +29,7 @@ class Game
 		int map_length;
 		int target_row;
 		int target_column;
-	
+		int score;
 };
 
 #endif

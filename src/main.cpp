@@ -127,6 +127,8 @@ void game()
         if(game_.set_game_map(snake_, update_target) == false)
         {
             is_quit = true;
+            cout<<"Game is Over"<<std::endl;
+            cout<<"Your score is "<<game_.getScore()<<std::endl;
             break;
         }       
         if(is_move_catched)

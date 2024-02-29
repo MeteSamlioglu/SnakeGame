@@ -10,6 +10,12 @@
 
 ../include/Directions.hpp
 
+../include/Game.hpp
+Snake.hpp
+../include/Snake.hpp
+SnakeObject.hpp
+../include/SnakeObject.hpp
+
 ../include/Move.hpp
 Coordinates.hpp
 ../include/Coordinates.hpp
@@ -32,23 +38,35 @@ queue
 list
 -
 
-/mnt/d/snake/src/Snake.cpp
+/mnt/d/snake/src/main.cpp
 iostream
--
-Snake.hpp
-/mnt/d/snake/src/Snake.hpp
-SnakeObject.hpp
-/mnt/d/snake/src/SnakeObject.hpp
-Directions.hpp
-/mnt/d/snake/src/Directions.hpp
-Coordinates.hpp
-/mnt/d/snake/src/Coordinates.hpp
-termios.h
 -
 cstdlib
 -
 ncurses.h
 -
 unistd.h
+-
+queue
+-
+list
+-
+thread
+-
+termios.h
+-
+Snake.hpp
+/mnt/d/snake/src/Snake.hpp
+Game.hpp
+/mnt/d/snake/src/Game.hpp
+Directions.hpp
+/mnt/d/snake/src/Directions.hpp
+Coordinates.hpp
+/mnt/d/snake/src/Coordinates.hpp
+random
+-
+chrono
+-
+atomic
 -
 
