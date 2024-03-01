@@ -156,17 +156,21 @@ list<pair<int,int>> Snake::get_snake_coords() const {
 
 void Snake::set_active_move(Directions global_direction, bool is_move_catched) 
 {
+    
     Node* temp = head;
     
     if(is_move_catched)
     {	        
+       
         while(temp != nullptr)
         {
             temp->data.setActiveMove(global_direction, head->data.getCoordinates());
             
             temp = temp->next;
         }
+        
     }
+    
     temp = head;
     while(temp != nullptr)
     {

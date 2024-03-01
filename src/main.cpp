@@ -24,8 +24,11 @@ using namespace std;
 Directions global_direction = RIGHT;
 
 bool is_move_catched = false;
-
 bool update_target = false;
+
+long long int reflesh_ratio = 70000;
+int score_init = 0;
+
 //bool is_quit = false;
 std::atomic<bool> is_quit(false);
 
@@ -121,8 +124,18 @@ void game()
     {
 
         update_terminal(game_); 
-
-        snake_.set_active_move(global_direction, is_move_catched);
+        
+        if(
+           (snake_.get_head_direction() == LEFT && global_direction == RIGHT) || 
+           (snake_.get_head_direction() == RIGHT && global_direction == LEFT) || 
+           (snake_.get_head_direction() == UP && global_direction == DOWN) ||
+           (snake_.get_head_direction() == DOWN && global_direction == UP)
+          )
+        {
+            snake_.set_active_move(snake_.get_head_direction(), false);
+        }
+        else
+            snake_.set_active_move(global_direction, is_move_catched);
         
         if(game_.set_game_map(snake_, update_target) == false)
         {
@@ -165,9 +178,17 @@ void display_map(Game game_)
 
 void update_terminal(Game game_)
 {
+        cout<<"Score : "<<game_.getScore()<<std::endl;
         cout<<endl<<endl;
         display_map(game_);
-        usleep(150000);
+
+        if(game_.getScore() > score_init)
+        {
+            reflesh_ratio+=750;
+            score_init = game_.getScore();
+        }
+        
+        usleep(reflesh_ratio);
         //std::system("cls");
         std::system("clear");
 }
